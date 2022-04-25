@@ -22,6 +22,7 @@ class TodoStore {
     if (title.length < 3) {
       return;
     }
+
     this.list.push({
       id: Date.now(),
       title,

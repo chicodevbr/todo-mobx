@@ -6,7 +6,7 @@ const todos = new TodoStore();
 
 const App = () => {
   return (
-    <div className="App">
+    <div className="app">
       <TodoInput todos={todos} />
       <TodoList todos={todos} />
     </div>
