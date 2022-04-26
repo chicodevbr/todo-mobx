@@ -1,25 +1,36 @@
 import TodoInput from './Todo/TodoInput';
 import TodoList from './Todo/TodoList';
 import styles from './App.module.css';
-import { useState } from 'react';
+import { observer, useLocalObservable } from 'mobx-react-lite';
+import { observable } from 'mobx';
 
 const App = () => {
-  const [todosVisible, setTodosVisible] = useState(true);
+  const appUI = useLocalObservable(() => ({
+    todosVisible: true,
+    toggleTodoVisibility() {
+      appUI.todosVisible = !appUI.todosVisible;
+    },
+  }));
 
-  const handleClick = () => setTodosVisible((state) => !state);
+  const todosVisible = observable.box(true);
+  todosVisible.observe_(({ newValue }) => {
+    console.log('the new value is', newValue);
+  });
+  todosVisible.set(false);
+  todosVisible.set(true);
 
   return (
     <div className="app">
       <TodoInput />
       <div className={styles['todo-list-wrapper']}>
-        <h2 onClick={handleClick}>
-          <span>{todosVisible ? '-' : '+'}</span>
+        <h2 onClick={appUI.toggleTodoVisibility}>
+          <span>{appUI.todosVisible ? '-' : '+'}</span>
           Todos
         </h2>
+        {appUI.todosVisible && <TodoList />}
       </div>
-      {todosVisible && <TodoList />}
     </div>
   );
 };
 
-export default App;
+export default observer(App);
