@@ -7,17 +7,14 @@ export interface Todo {
 }
 
 class TodoStore {
+  @observable
   list: Todo[] = [];
 
   constructor() {
-    makeObservable(this, {
-      list: observable,
-      add: action,
-      toggle: action,
-      remove: action,
-    });
+    makeObservable(this);
   }
 
+  @action
   add(title: string) {
     if (title.length < 3) {
       return;
@@ -30,10 +27,12 @@ class TodoStore {
     });
   }
 
+  @action
   toggle(todo: Todo) {
     todo.isDone = !todo.isDone;
   }
 
+  @action
   remove(todo: Todo) {
     this.list = this.list.filter((t) => t.id !== todo.id);
   }
