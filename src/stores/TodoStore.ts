@@ -1,4 +1,4 @@
-import { action, makeObservable, observable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 
 export interface Todo {
   id: number;
@@ -6,37 +6,29 @@ export interface Todo {
   isDone: boolean;
 }
 
-class TodoStore {
-  list: Todo[] = [];
+const TodoStore = () =>
+  makeAutoObservable({
+    list: [] as Todo[],
 
-  constructor() {
-    makeObservable(this, {
-      list: observable,
-      add: action,
-      toggle: action,
-      remove: action,
-    });
-  }
+    add(title: string) {
+      if (title.length < 3) {
+        return;
+      }
 
-  add(title: string) {
-    if (title.length < 3) {
-      return;
-    }
+      this.list.push({
+        id: Date.now(),
+        title,
+        isDone: false,
+      });
+    },
 
-    this.list.push({
-      id: Date.now(),
-      title,
-      isDone: false,
-    });
-  }
+    toggle(todo: Todo) {
+      todo.isDone = !todo.isDone;
+    },
 
-  toggle(todo: Todo) {
-    todo.isDone = !todo.isDone;
-  }
-
-  remove(todo: Todo) {
-    this.list = this.list.filter((t) => t.id !== todo.id);
-  }
-}
+    remove(todo: Todo) {
+      this.list = this.list.filter((t) => t.id !== todo.id);
+    },
+  });
 
 export default TodoStore;
