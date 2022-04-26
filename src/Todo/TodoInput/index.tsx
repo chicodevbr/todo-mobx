@@ -1,8 +1,10 @@
 import { FormEvent } from 'react';
-import TodoStore from '../../stores/TodoStore';
+import { useStore } from '../../stores';
 import styles from './TodoInput.module.css';
 
-const TodoInput = ({ todos }: { todos: TodoStore }) => {
+const TodoInput = () => {
+  const { todos } = useStore();
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
@@ -16,7 +18,7 @@ const TodoInput = ({ todos }: { todos: TodoStore }) => {
 
   return (
     <form onSubmit={handleSubmit} className={styles['todo-input-group']}>
-      <input name="todo-input" placeholder="Add todo.." />
+      <input name="todo-input" placeholder="Add todo..." />
       <button type="submit">Add Todo</button>
     </form>
   );
