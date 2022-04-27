@@ -2,22 +2,25 @@ import TodoInput from './Todo/TodoInput';
 import TodoList from './Todo/TodoList';
 import styles from './App.module.css';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { observable } from 'mobx';
+import { useEffect } from 'react';
 
 const App = () => {
   const appUI = useLocalObservable(() => ({
     todosVisible: true,
-    toggleTodoVisibility() {
-      appUI.todosVisible = !appUI.todosVisible;
+    loading: false,
+    *toggleTodoVisibility() {
+      this.loading = true;
+
+      yield new Promise((resolve) => setTimeout(() => resolve(void 0), 500));
+
+      this.loading = false;
+      this.todosVisible = !appUI.todosVisible;
     },
   }));
 
-  const todosVisible = observable.box(true);
-  todosVisible.observe_(({ newValue }) => {
-    console.log('the new value is', newValue);
-  });
-  todosVisible.set(false);
-  todosVisible.set(true);
+  useEffect(() => {
+    console.log({ loading: appUI.loading });
+  }, [appUI.loading]);
 
   return (
     <div className="app">
