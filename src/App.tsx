@@ -2,6 +2,7 @@ import TodoInput from './Todo/TodoInput';
 import TodoList from './Todo/TodoList';
 import styles from './App.module.css';
 import { observer, useLocalObservable } from 'mobx-react-lite';
+import { useEffect } from 'react';
 
 const App = () => {
   const appUI = useLocalObservable(() => ({
@@ -16,6 +17,10 @@ const App = () => {
       this.todosVisible = !appUI.todosVisible;
     },
   }));
+
+  useEffect(() => {
+    console.log({ loading: appUI.loading });
+  }, [appUI.loading]);
 
   return (
     <div className="app">
