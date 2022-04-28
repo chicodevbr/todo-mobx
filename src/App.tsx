@@ -4,15 +4,18 @@ import styles from './App.module.css';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useStore } from './stores';
 import { useEffect } from 'react';
-import { autorun } from 'mobx';
+import { reaction } from 'mobx';
 
 const App = () => {
   const { todos } = useStore();
 
   useEffect(() => {
-    const disposeAutorun = autorun(
+    const disposeReaction = reaction(
       () => {
-        console.log(todos.list.length);
+        return todos.list.length;
+      },
+      (length: number) => {
+        console.log(length);
         throw new Error('custom error');
       },
       {
@@ -22,7 +25,7 @@ const App = () => {
     );
 
     return () => {
-      disposeAutorun();
+      disposeReaction();
     };
   }, [todos.list]);
 
