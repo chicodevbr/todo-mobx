@@ -12,10 +12,13 @@ const App = () => {
   useEffect(() => {
     const disposeReaction = reaction(
       () => {
-        return todos.list.length;
+        return {
+          length: todos.list.length,
+          unfinishedTodos: todos.unfinishedTodos,
+        };
       },
-      (length: number) => {
-        console.log(length);
+      (newValue, oldValue) => {
+        console.log(newValue, oldValue);
         throw new Error('custom error');
       },
       {
