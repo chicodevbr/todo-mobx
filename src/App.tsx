@@ -10,9 +10,20 @@ const App = () => {
   const { todos } = useStore();
 
   useEffect(() => {
-    autorun(() => {
-      console.log(todos.list.length);
-    });
+    const disposeAutorun = autorun(
+      () => {
+        console.log(todos.list.length);
+        throw new Error('custom error');
+      },
+      {
+        delay: 500,
+        onError: (err) => console.log(err.message),
+      }
+    );
+
+    return () => {
+      disposeAutorun();
+    };
   }, [todos.list]);
 
   const appUI = useLocalObservable(() => ({
