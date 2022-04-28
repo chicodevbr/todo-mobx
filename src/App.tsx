@@ -4,33 +4,17 @@ import styles from './App.module.css';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useStore } from './stores';
 import { useEffect } from 'react';
-import { reaction } from 'mobx';
+import { reaction, when } from 'mobx';
 
 const App = () => {
   const { todos } = useStore();
 
   useEffect(() => {
-    const disposeReaction = reaction(
-      () => {
-        return {
-          length: todos.list.length,
-          unfinishedTodos: todos.unfinishedTodos,
-        };
-      },
-      (newValue, oldValue) => {
-        console.log(newValue, oldValue);
-        throw new Error('custom error');
-      },
-      {
-        delay: 500,
-        onError: (err) => console.log(err.message),
-      }
-    );
-
-    return () => {
-      disposeReaction();
-    };
-  }, [todos.list]);
+    const promiseWhen = when(() => !appUI.todosVisible);
+    promiseWhen.then(() => {
+      console.log('clean up!');
+    });
+  }, []);
 
   const appUI = useLocalObservable(() => ({
     todosVisible: true,
