@@ -4,7 +4,7 @@ import styles from './App.module.css';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useStore } from './stores';
 import { useEffect } from 'react';
-import { reaction, when } from 'mobx';
+import { when } from 'mobx';
 
 const App = () => {
   const { todos } = useStore();
