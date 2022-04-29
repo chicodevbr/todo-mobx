@@ -1,21 +1,11 @@
 import TodoInput from './Todo/TodoInput';
 import TodoList from './Todo/TodoList';
 import styles from './App.module.css';
-import { observer, useLocalObservable } from 'mobx-react-lite';
+import { useLocalObservable, observer } from 'mobx-react-lite';
+import TodoStore from './stores/TodoStore';
 import { useStore } from './stores';
-import { useEffect } from 'react';
-import { reaction, when } from 'mobx';
 
-const App = () => {
-  const { todos } = useStore();
-
-  useEffect(() => {
-    const promiseWhen = when(() => !appUI.todosVisible);
-    promiseWhen.then(() => {
-      console.log('clean up!');
-    });
-  }, []);
-
+const App = observer(({ todos }: { todos: ReturnType<typeof TodoStore> }) => {
   const appUI = useLocalObservable(() => ({
     todosVisible: true,
     loading: false,
@@ -36,6 +26,12 @@ const App = () => {
       </div>
     </div>
   );
-};
+});
 
-export default observer(App);
+const AppWrapper = () => {
+  const { todos } = useStore();
+
+  return <App todos={todos} />;
+};
+export { App };
+export default AppWrapper;
